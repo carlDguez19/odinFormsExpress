@@ -29,11 +29,11 @@ exports.usersCreateGet = (req, res) => {
   });
 };
 
-exports.usersCreatePost = (req, res) => {
-  const { firstName, lastName } = req.body;
-  usersStorage.addUser({ firstName, lastName });
-  res.redirect("/");
-};
+// exports.usersCreatePost = (req, res) => {
+//   const { firstName, lastName } = req.body;
+//   usersStorage.addUser({ firstName, lastName });
+//   res.redirect("/");
+// };
 
 // We can pass an entire array of middleware validations to our controller.
 exports.usersCreatePost = [
