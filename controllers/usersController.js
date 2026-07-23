@@ -8,12 +8,26 @@ const alphaErr = "must only contain letters.";
 const lengthErr = "must be between 1 and 10 characters.";
 
 const validateUser = [
+  
   body("firstName").trim()
     .isAlpha().withMessage(`First name ${alphaErr}`)
     .isLength({ min: 1, max: 10 }).withMessage(`First name ${lengthErr}`),
+  
   body("lastName").trim()
     .isAlpha().withMessage(`Last name ${alphaErr}`)
     .isLength({ min: 1, max: 10 }).withMessage(`Last name ${lengthErr}`),
+    
+  body("email").trim()
+    .notEmpty().withMessage("email is required")
+    .isEmail().withMessage("must be a valid email address"),
+
+  body("age")
+    .optional({values: "falsy"})
+    .isInt({ min: 18, max: 120}).withMessage("age must be between 18 and 120"),
+
+  body("bio")
+    .optional({ values: "falsy"})
+    .isLength({ max: 200 }).withMessage("Bio must be under 200 characters")
 ];
 
 exports.usersListGet = (req, res) => {
@@ -66,8 +80,8 @@ exports.usersUpdatePost = [
         errors: errors.array(),
       });
     }
-    const { firstName, lastName } = matchedData(req);
-    usersStorage.updateUser(req.params.id, { firstName, lastName });
+    const { firstName, lastName, email, age, bio } = matchedData(req);
+    usersStorage.updateUser(req.params.id, { firstName, lastName, email, age, bio });
     res.redirect("/");
   }
 ];
