@@ -29,12 +29,6 @@ exports.usersCreateGet = (req, res) => {
   });
 };
 
-// exports.usersCreatePost = (req, res) => {
-//   const { firstName, lastName } = req.body;
-//   usersStorage.addUser({ firstName, lastName });
-//   res.redirect("/");
-// };
-
 // We can pass an entire array of middleware validations to our controller.
 exports.usersCreatePost = [
   validateUser,
@@ -46,8 +40,8 @@ exports.usersCreatePost = [
         errors: errors.array(),
       });
     }
-    const { firstName, lastName } = matchedData(req);
-    usersStorage.addUser({ firstName, lastName });
+    const { firstName, lastName, email, age, bio } = matchedData(req);
+    usersStorage.addUser({ firstName, lastName, email, age, bio });
     res.redirect("/");
   }
 ];
@@ -81,4 +75,20 @@ exports.usersUpdatePost = [
 exports.usersDeletePost = (req, res) => {
   usersStorage.deleteUser(req.params.id);
   res.redirect("/");
+};
+
+exports.usersSearchGet = (req, res) => {
+  const query = req.query.q?.toLowerCase() || "";
+
+  const results = usersStorage.getUsers().filter(user =>
+    user.firstName.toLowerCase().includes(query) ||
+    user.lastName.toLowerCase().includes(query) ||
+    user.email.toLowerCase().includes(query)
+  );
+
+  res.render("search", {
+    title: "Search results",
+    query,
+    results
+  });
 };
